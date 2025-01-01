@@ -1,0 +1,7 @@
+function custom_view_tracker_admin_styles($hook) {
+    if ($hook !== 'toplevel_page_view-tracker-settings') {
+        return;
+    }
+    wp_enqueue_style('custom-view-tracker-styles', plugin_dir_url(__FILE__) . '../assets/css/admin-styles.css');
+}
+add_action('admin_enqueue_scripts', 'custom_view_tracker_admin_styles');
