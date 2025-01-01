@@ -42,13 +42,18 @@ function custom_view_tracker_settings_page() {
             update_option('daily_site_views', []);
         }
     }
-
     ?>
     <div class="wrap">
         <h1>View Tracker Settings</h1>
 
         <!-- Total Site Views -->
         <h2>Total Site Views: <?php echo $total_site_views; ?></h2>
+        <!-- Reset Total Views Button -->
+        <form method="POST" style="margin-top: 10px;">
+            <input type="submit" name="reset_total_views" class="button button-secondary" value="Reset Total Views">
+        </form>
+
+        <br><br>
 
         <!-- Daily Site Views Table -->
         <h3>Daily Site Views</h3>
@@ -72,31 +77,71 @@ function custom_view_tracker_settings_page() {
             </tbody>
         </table>
         
-        <br>
+        <!-- Reset Daily Views Button -->
+        <form method="POST" style="margin-top: 10px;">
+            <input type="submit" name="reset_daily_views" class="button button-secondary" value="Reset Daily Views">
+        </form>
+
+        <br><br>
 
         <!-- Form for selecting post types -->
         <form method="POST">
-            <label for="view_tracker_post_types"><strong>Select Post Types:</strong></label>
-            <select name="view_tracker_post_types[]" id="view_tracker_post_types" multiple style="width: 100%; max-width: 400px;">
-                <?php foreach ($post_types as $post_type_slug => $post_type) : ?>
-                    <option value="<?php echo esc_attr($post_type_slug); ?>"
-                        <?php echo in_array($post_type_slug, $selected_post_types) ? 'selected' : ''; ?>>
-                        <?php echo esc_html($post_type->label); ?>
-                    </option>
-                <?php endforeach; ?>
-            </select>
-            <br><br>
-            <input type="submit" class="button button-primary" value="Save Settings">
-        </form>
+    <label for="view_tracker_post_types"><h3>Select Post Types to track viewers:</h3></label>
+    <?php foreach ($post_types as $post_type_slug => $post_type) : ?>
+        <input type="checkbox" name="view_tracker_post_types[]" value="<?php echo esc_attr($post_type_slug); ?>"
+            <?php echo in_array($post_type_slug, $selected_post_types) ? 'checked' : ''; ?>>
+        <label for="view_tracker_post_types[]"><?php echo esc_html($post_type->label); ?></label><br>
+    <?php endforeach; ?>
+    <br>
+    <input type="submit" class="button button-primary" value="Save Settings">
+</form>
 
-        <!-- Reset buttons -->
-        <form method="POST" style="margin-top: 20px;">
-            <input type="submit" name="reset_total_views" class="button button-secondary" value="Reset Total Views">
-            <input type="submit" name="reset_daily_views" class="button button-secondary" value="Reset Daily Views">
-        </form>
+
+        <br><br>
+
+        <!-- Shortcodes Section -->
+        <h2>Shortcodes</h2>
+        <b>Use the following shortcodes to display data on your site:</b>
+        <ul>
+            <li>
+                <button class="copy-shortcode" data-shortcode="[total_site_views]">
+                    [total_site_views]
+                </button> - <strong>Displays the total number of views for the entire site. It'll be better if you use it in header or footer.</strong>
+            </li>
+            <li>
+                <button class="copy-shortcode" data-shortcode="[today_site_views]">
+                    [today_site_views]
+                </button> - <strong>Displays the total number of site views for the current day. It'll be better if you use it in header or footer.</strong>
+            </li>
+            <li>
+                <button class="copy-shortcode" data-shortcode="[post_views]">
+                    [post_views]
+                </button> - <strong>Displays the views for individual posts. Works only on single post pages.</strong>
+            </li>
+        </ul>
     </div>
+
+    <!-- JavaScript for Copy to Clipboard -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const buttons = document.querySelectorAll('.copy-shortcode');
+            buttons.forEach(button => {
+                button.addEventListener('click', function () {
+                    const shortcode = button.getAttribute('data-shortcode');
+                    navigator.clipboard.writeText(shortcode).then(() => {
+                        alert(`Shortcode "${shortcode}" copied to clipboard!`);
+                    }).catch(err => {
+                        alert('Failed to copy shortcode.');
+                    });
+                });
+            });
+        });
+    </script>
     <?php
 }
+
+
+
 
 // Add Views column to selected post types dynamically
 function add_views_column_to_selected_post_types($columns) {
