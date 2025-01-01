@@ -1,8 +1,8 @@
 <?php
 /*
-Plugin Name: Custom View Tracker
+Plugin Name: Views Tracker
 Description: Tracks and displays each post's views, today's viewers, and total website viewers using shortcodes.
-Version: 1.0
+Version: 1.1
 Author: Khaled Masud
 Author URI: https://khaledmasud.com
 */
