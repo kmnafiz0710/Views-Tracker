@@ -1,11 +1,18 @@
 <?php
 // Track total site views
 function track_total_site_views() {
-    $total_views = get_option('total_site_views', 0);
+    if (did_action('track_total_site_views') > 0) {
+        return; // Prevent duplicate execution
+    }
+
+    $total_views = get_option('total_site_views', 10000);
     $total_views++;
     update_option('total_site_views', $total_views);
+
+    do_action('track_total_site_views'); // Mark the action as done
 }
 add_action('wp_footer', 'track_total_site_views');
+
 
 // Track daily site views
 function track_daily_site_views() {
